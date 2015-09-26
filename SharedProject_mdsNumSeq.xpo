@@ -1,0 +1,336 @@
+Exportfile for AOT version 1.0 or later
+Formatversion: 1
+
+***Element: UTS
+
+; Microsoft Dynamics AX String: NumSeq_sav unloaded
+; --------------------------------------------------------------------------------
+  USERTYPEVERSION 6
+  
+  USERTYPE #NumSeq_sav
+  STRING
+    PROPERTIES
+      Name                #NumSeq_sav
+      Origin              #{CF93E31C-BD08-4114-8FC5-5846B8B091A2}
+    ENDPROPERTIES
+    
+    TYPEELEMENTS
+    ENDTYPEELEMENTS
+    
+    TYPEREFERENCES
+    ENDTYPEREFERENCES
+    
+    TYPELOOKUPS
+    ENDTYPELOOKUPS
+    
+  ENDUSERTYPE
+  
+
+***Element: DBT
+
+; Microsoft Dynamics AX Table : NumSeqTableEx unloaded
+; --------------------------------------------------------------------------------
+  TABLEVERSION 1
+  
+  TABLE #NumSeqTableEx
+    EnforceFKRelation 1
+    PROPERTIES
+      Name                #NumSeqTableEx
+      CreateRecIdIndex    #Yes
+      PrimaryIndex        #SurrogateKey
+      ClusterIndex        #SurrogateKey
+      Origin              #{6E226951-8270-483C-AE3C-AE47556D0AE7}
+    ENDPROPERTIES
+    
+    FIELDS
+      FIELD #EmplId
+        STRING
+        PROPERTIES
+          Name                #EmplId
+          Table               #NumSeqTableEx
+          Origin              #{D6DE3EB0-582E-4217-9DA8-861BBD9A921E}
+        ENDPROPERTIES
+        
+      FIELD #NumSeq_sav
+        STRING
+        PROPERTIES
+          Name                #NumSeq_sav
+          Table               #NumSeqTableEx
+          Origin              #{3CE394C7-8533-4F06-B6AA-B19A2AA63475}
+          ExtendedDataType    #NumSeq_sav
+        ENDPROPERTIES
+        
+    ENDFIELDS
+    GROUPS
+    ENDGROUPS
+    
+    INDICES
+    ENDINDICES
+    FULLTEXTINDICES
+    ENDFULLTEXTINDICES
+    REFERENCES
+    ENDREFERENCES
+    
+    DELETEACTIONS
+    ENDDELETEACTIONS
+    
+    METHODS
+      SOURCE #numseqget
+        #public void numseqget()
+        #{
+        #NumberSeq num;
+        #NumberSequenceReference numberSeqReference;
+        #numberSeqReference=SalesParameters::numRefEx();
+        #
+        #if(numberSeqReference)
+        #{
+        #num=NumberSeq::newGetNum(numberSeqReference);
+        #this.NumSeq_sav=num.num();
+        #}
+        #}
+        #
+      ENDSOURCE
+    ENDMETHODS
+  ENDTABLE
+  
+
+***Element: FRM
+
+; Microsoft Dynamics AX Forms unloaded
+; --------------------------------------------------------------------------------
+FRMVERSION 12
+
+FORM #NumSeqExForm
+  PROPERTIES
+    Name                #NumSeqExForm
+    Origin              #{1B98B078-ED36-4652-9BA8-0095DD4B8747}
+  ENDPROPERTIES
+  
+  METHODS
+    SOURCE #classDeclaration
+      #public class FormRun extends ObjectRun
+      #{
+      #   NumberSeqFormHandler numsequFormHandler;
+      #}
+    ENDSOURCE
+    SOURCE #numberseqFormHandler
+      #public NumberSeqFormHandler numberseqFormHandler()
+      #{
+      #if(!numsequFormHandler)
+      #{
+      #numsequFormHandler=NumberSeqFormHandler::newForm(SalesParameters::numRefEx().NumberSequenceId,element,NumSeqTableEx_DS,fieldNum(NumSeqTableEx,NumSeq_sav));
+      #
+      #}
+      #return numsequFormHandler;
+      #}
+    ENDSOURCE
+  ENDMETHODS
+  OBJECTBANK
+    PROPERTIES
+    ENDPROPERTIES
+    
+    DATASOURCE
+      OBJECTPOOL
+        PROPERTIES
+          Name                #NumSeqTableEx
+          Table               #NumSeqTableEx
+        ENDPROPERTIES
+        
+        FIELDLIST
+        ENDFIELDLIST
+      ENDOBJECTPOOL
+      METHODS
+        SOURCE #write
+          #public void write()
+          #{
+          #element.numberseqFormHandler().formMethodDataSourceWrite();
+          #super();
+          #}
+        ENDSOURCE
+        SOURCE #create
+          #public void create(boolean _append = false)
+          #{
+          #element.numberseqFormHandler().formMethodDataSourceCreatePre();
+          #super(_append);
+          #element.numberseqFormHandler().formMethodDataSourceCreate();
+          #}
+        ENDSOURCE
+        SOURCE #delete
+          #public void delete()
+          #{
+          #element.numberseqFormHandler().formMethodDataSourceDelete();
+          #super();
+          #}
+        ENDSOURCE
+      ENDMETHODS
+    ENDDATASOURCE
+  ENDOBJECTBANK
+  
+  REFERENCEDATASOURCES
+  ENDREFERENCEDATASOURCES
+  
+  JOINS
+  ENDJOINS
+  
+  PARTREFERENCES
+  ENDPARTREFERENCES
+  
+  DESIGN
+    PROPERTIES
+      Width               #Column width
+      Height              #Column height
+      Caption             #NumSeqEx Form
+    ENDPROPERTIES
+    
+    CONTAINER
+      CONTROL GRID
+        PROPERTIES
+          Name                #Grid
+          Width               #Column width
+          Height              #Column height
+          ElementPosition     #1073741823
+          DataSource          #NumSeqTableEx
+          AlternateRowShading #Yes
+        ENDPROPERTIES
+        
+        METHODS
+        ENDMETHODS
+      ENDCONTROL 
+      
+      CONTROL STRINGEDIT
+        PROPERTIES
+          Name                #NumSeqTableEx_NumSeq_sav
+          ElementPosition     #1431655764
+          HierarchyParent     #Grid
+          DataSource          #NumSeqTableEx
+          DataField           #NumSeq_sav
+        ENDPROPERTIES
+        
+        METHODS
+        ENDMETHODS
+      ENDCONTROL 
+      
+    ENDCONTAINER
+    
+  ENDDESIGN
+  
+  PERMISSIONS #Permissions
+    PROPERTIES
+    ENDPROPERTIES
+    
+    PERMISSIONSET #Read
+      PROPERTIES
+      ENDPROPERTIES
+      
+      FORM #Controls
+      ENDFORM
+      
+    TABLES #Tables
+    ENDTABLES
+    
+  SERVERMETHODS #Server Methods
+  ENDSERVERMETHODS
+  
+ASSOCIATEDFORMS #Associated Forms
+ENDASSOCIATEDFORMS
+
+ENDPERMISSIONSET
+
+PERMISSIONSET #Update
+  PROPERTIES
+  ENDPROPERTIES
+  
+  FORM #Controls
+  ENDFORM
+  
+TABLES #Tables
+ENDTABLES
+
+SERVERMETHODS #Server Methods
+ENDSERVERMETHODS
+
+ASSOCIATEDFORMS #Associated Forms
+ENDASSOCIATEDFORMS
+
+ENDPERMISSIONSET
+
+PERMISSIONSET #Create
+  PROPERTIES
+  ENDPROPERTIES
+  
+  FORM #Controls
+  ENDFORM
+  
+TABLES #Tables
+ENDTABLES
+
+SERVERMETHODS #Server Methods
+ENDSERVERMETHODS
+
+ASSOCIATEDFORMS #Associated Forms
+ENDASSOCIATEDFORMS
+
+ENDPERMISSIONSET
+
+PERMISSIONSET #Delete
+  PROPERTIES
+  ENDPROPERTIES
+  
+  FORM #Controls
+  ENDFORM
+  
+TABLES #Tables
+ENDTABLES
+
+SERVERMETHODS #Server Methods
+ENDSERVERMETHODS
+
+ASSOCIATEDFORMS #Associated Forms
+ENDASSOCIATEDFORMS
+
+ENDPERMISSIONSET
+
+ENDPERMISSIONS
+
+ENDFORM
+
+
+***Element: PRN
+
+; Microsoft Dynamics AX Project : mdsNumSeq unloaded
+; --------------------------------------------------------------------------------
+  PROJECTVERSION 2
+  
+  PROJECT #mdsNumSeq
+  SHARED
+  PROPERTIES
+    Name                #mdsNumSeq
+    Origin              #{8A0408E7-85B0-47D6-962A-E09C297082B7}
+  ENDPROPERTIES
+  
+    PROJECTCLASS ProjectNode
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 41
+      UTILOBJECTID 103768
+      NODETYPE 234
+      NAME #NumSeq_sav
+    ENDNODE
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 44
+      UTILOBJECTID 103703
+      NODETYPE 204
+      NAME #NumSeqTableEx
+    ENDNODE
+    BEGINNODE
+      FILETYPE 0
+      UTILTYPE 11
+      UTILOBJECTID 0
+      NODETYPE 201
+      NAME #NumSeqExForm
+    ENDNODE
+  ENDPROJECT
+  
+
+***Element: END
